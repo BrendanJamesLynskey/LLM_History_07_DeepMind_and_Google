@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LLM History 07 &mdash; DeepMind &amp; Google AI</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0a0a; --bg-card: #0d1117; --bg-code: #161b22;
+            --text-primary: #e6edf3; --text-secondary: #8b949e;
+            --accent: #A371F7; --accent-dim: #A371F744; --accent-glow: #A371F733;
+            --accent-2: #FF7B72; --accent-3: #F0A726; --accent-4: #3FB950;
+            --border: #21262d;
+            --font-display: 'Space Grotesk', sans-serif;
+            --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+            --font-body: 'Inter', sans-serif;
+            --max-width: 900px;
+        }
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
+        body { background: var(--bg-primary); color: var(--text-primary); font-family: var(--font-body); font-size: 17px; line-height: 1.7; overflow-x: hidden; }
+        .hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 2rem 1.5rem; text-align: center; position: relative; }
+        .hero::before { content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 700px; height: 600px; background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%); pointer-events: none; z-index: 0; }
+        .hero > * { position: relative; z-index: 1; }
+        .series-label { font-family: var(--font-mono); font-size: 0.85rem; color: var(--accent); letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 1rem; }
+        .hero h1 { font-family: var(--font-display); font-size: clamp(2rem, 5vw, 3.2rem); font-weight: 700; color: var(--text-primary); line-height: 1.2; margin-bottom: 1rem; }
+        .hero h1 .accent { color: var(--accent); }
+        .hero .subtitle { font-size: 1.1rem; color: var(--text-secondary); max-width: 640px; margin-bottom: 2rem; }
+        .tags { display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center; margin-bottom: 2.5rem; }
+        .tag { font-family: var(--font-mono); font-size: 0.75rem; padding: 0.25rem 0.75rem; border-radius: 999px; border: 1px solid var(--accent); color: var(--accent); background: var(--accent-dim); white-space: nowrap; }
+        .tag.r { border-color: var(--accent-2); color: var(--accent-2); background: rgba(255,123,114,0.10); }
+        .tag.y { border-color: var(--accent-3); color: var(--accent-3); background: rgba(240,167,38,0.10); }
+        .tag.g { border-color: var(--accent-4); color: var(--accent-4); background: rgba(63,185,80,0.10); }
+        .pipeline { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 0.25rem; margin-bottom: 1rem; max-width: var(--max-width); }
+        .pipeline-step { font-family: var(--font-mono); font-size: 0.7rem; padding: 0.3rem 0.7rem; background: var(--bg-card); border: 1px solid var(--border); border-radius: 4px; color: var(--text-secondary); white-space: nowrap; }
+        .pipeline-arrow { color: var(--accent); font-size: 0.9rem; font-weight: 700; }
+        .slide { min-height: 100vh; max-width: var(--max-width); margin: 0 auto; padding: 4rem 1.5rem; position: relative; display: flex; flex-direction: column; justify-content: center; }
+        .slide-number { font-family: var(--font-display); font-size: 5rem; font-weight: 700; color: var(--accent-dim); position: absolute; top: 2rem; right: 1.5rem; line-height: 1; user-select: none; }
+        .slide h2 { font-family: var(--font-display); font-size: 1.9rem; font-weight: 700; color: var(--accent); margin-bottom: 1.5rem; line-height: 1.25; }
+        .slide h3 { font-family: var(--font-display); font-size: 1.3rem; font-weight: 600; color: var(--text-primary); margin-top: 1.5rem; margin-bottom: 0.75rem; }
+        .slide p { margin-bottom: 1rem; color: var(--text-secondary); }
+        .slide p strong { color: var(--text-primary); }
+        .slide ul, .slide ol { margin-bottom: 1rem; padding-left: 1.5rem; color: var(--text-secondary); }
+        .slide li { margin-bottom: 0.4rem; }
+        .slide li strong { color: var(--text-primary); }
+        .slide code { font-family: var(--font-mono); font-size: 0.88em; background: var(--bg-code); padding: 0.1rem 0.35rem; border-radius: 3px; color: var(--accent); }
+        .table-wrap { overflow-x: auto; margin: 1.25rem 0; border-radius: 8px; border: 1px solid var(--border); }
+        table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+        th { background: var(--bg-code); color: var(--accent); font-weight: 600; text-align: left; padding: 0.75rem 1rem; border-bottom: 1px solid var(--border); font-family: var(--font-display); white-space: nowrap; }
+        td { padding: 0.6rem 1rem; border-bottom: 1px solid var(--border); color: var(--text-secondary); }
+        tr:last-child td { border-bottom: none; }
+        tr:nth-child(even) td { background: rgba(13, 17, 23, 0.5); }
+        .diagram-grid { display: grid; gap: 0.75rem; margin: 1.5rem 0; padding: 1.5rem; background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; }
+        .diagram-grid.cols-2 { grid-template-columns: 1fr 1fr; }
+        .diagram-grid.cols-3 { grid-template-columns: 1fr 1fr 1fr; }
+        .diagram-panel { padding: 1rem; background: var(--bg-code); border: 1px solid var(--border); border-radius: 6px; }
+        .diagram-panel.accent-border { border-left: 3px solid var(--accent); }
+        .diagram-panel.r { border-left: 3px solid var(--accent-2); }
+        .diagram-panel.y { border-left: 3px solid var(--accent-3); }
+        .diagram-panel.g { border-left: 3px solid var(--accent-4); }
+        .diagram-panel h4 { font-family: var(--font-display); font-size: 1rem; color: var(--accent); margin-bottom: 0.5rem; }
+        .diagram-panel.r h4 { color: var(--accent-2); }
+        .diagram-panel.y h4 { color: var(--accent-3); }
+        .diagram-panel.g h4 { color: var(--accent-4); }
+        .diagram-panel p, .diagram-panel ul { font-size: 0.9rem; }
+        .callout { background: var(--bg-card); border-left: 3px solid var(--accent); border-radius: 0 8px 8px 0; padding: 1rem 1.25rem; margin: 1.25rem 0; }
+        .callout p { margin-bottom: 0; }
+        .callout .callout-label { font-family: var(--font-mono); font-size: 0.75rem; color: var(--accent); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.3rem; }
+        .callout.r { border-left-color: var(--accent-2); } .callout.r .callout-label { color: var(--accent-2); }
+        .callout.y { border-left-color: var(--accent-3); } .callout.y .callout-label { color: var(--accent-3); }
+        .callout.g { border-left-color: var(--accent-4); } .callout.g .callout-label { color: var(--accent-4); }
+        .quote { font-family: var(--font-display); font-size: 1.15rem; font-style: italic; color: var(--text-primary); padding: 1rem 1.5rem; border-left: 3px solid var(--accent); background: var(--bg-card); margin: 1.25rem 0; border-radius: 0 8px 8px 0; }
+        .quote .attr { display: block; margin-top: 0.5rem; font-style: normal; font-size: 0.85rem; color: var(--text-secondary); font-family: var(--font-mono); }
+        .contents-list { list-style: none; padding-left: 0; counter-reset: contents; }
+        .contents-list li { counter-increment: contents; padding: 0.6rem 0; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 1rem; }
+        .contents-list li:last-child { border-bottom: none; }
+        .contents-list li::before { content: counter(contents, decimal-leading-zero); font-family: var(--font-mono); font-size: 0.85rem; color: var(--accent); min-width: 2rem; }
+        .contents-list a { color: var(--text-primary); text-decoration: none; }
+        .contents-list a:hover { color: var(--accent); }
+        .footer { text-align: center; padding: 3rem 1.5rem; color: var(--text-secondary); font-size: 0.85rem; border-top: 1px solid var(--border); max-width: var(--max-width); margin: 0 auto; }
+        .footer a { color: var(--accent); text-decoration: none; }
+        .footer a:hover { text-decoration: underline; }
+        .person-card { display: grid; grid-template-columns: 90px 1fr; gap: 1rem; padding: 1rem; background: var(--bg-code); border: 1px solid var(--border); border-radius: 6px; margin-bottom: 0.6rem; }
+        .person-photo { width: 90px; height: 90px; border-radius: 50%; background: var(--accent-dim); border: 2px solid var(--accent); display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-weight: 700; font-size: 1.6rem; color: var(--accent); }
+        .person-card h4 { font-family: var(--font-display); margin-bottom: 0.2rem; color: var(--text-primary); }
+        .person-card .role { font-family: var(--font-mono); font-size: 0.75rem; color: var(--accent); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.4rem; }
+        .person-card p { font-size: 0.88rem; margin: 0; }
+        @media (max-width: 640px) {
+            .slide { padding: 3rem 1rem; min-height: auto; }
+            .slide-number { font-size: 3rem; top: 1.5rem; right: 1rem; }
+            .slide h2 { font-size: 1.5rem; }
+            .diagram-grid.cols-2, .diagram-grid.cols-3 { grid-template-columns: 1fr; }
+            .hero h1 { font-size: 1.8rem; }
+            table { font-size: 0.78rem; }
+            .person-card { grid-template-columns: 60px 1fr; }
+            .person-photo { width: 60px; height: 60px; font-size: 1.1rem; }
+        }
+    </style>
+</head>
+<body>
+
+<header class="hero">
+    <div class="series-label">LLM History Series &mdash; Presentation 07</div>
+    <h1><span class="accent">DeepMind</span> &mdash; The Other AGI Lab</h1>
+    <p class="subtitle">Founded in London in 2010, acquired by Google in 2014, source of AlphaGo and AlphaFold and (indirectly) the transformer paper. The lab spent the early 2020s catching up to OpenAI on language models from a standing start, merged with Google Brain in 2023, and now ships the Gemini line.</p>
+
+    <div class="tags">
+        <span class="tag">2010&ndash;2026</span>
+        <span class="tag y">Hassabis</span><span class="tag y">Suleyman</span><span class="tag y">Legg</span>
+        <span class="tag g">AlphaGo</span><span class="tag g">AlphaFold</span><span class="tag r">Gemini</span>
+    </div>
+
+    <div class="pipeline">
+        <span class="pipeline-step">Founded London (2010)</span>
+        <span class="pipeline-arrow">&rarr;</span>
+        <span class="pipeline-step">Google buys (2014)</span>
+        <span class="pipeline-arrow">&rarr;</span>
+        <span class="pipeline-step">AlphaGo (2016)</span>
+        <span class="pipeline-arrow">&rarr;</span>
+        <span class="pipeline-step">AlphaFold 2 (2020)</span>
+        <span class="pipeline-arrow">&rarr;</span>
+        <span class="pipeline-step">Brain merger (2023)</span>
+        <span class="pipeline-arrow">&rarr;</span>
+        <span class="pipeline-step">Gemini 1&hellip;2.5</span>
+    </div>
+</header>
+
+<section class="slide" id="slide-00">
+    <div class="slide-number">00</div>
+    <h2>What This Deck Covers</h2>
+    <p>Google DeepMind as it exists today is an unusual hybrid: a London-headquartered research lab famous for AlphaGo, an in-house ML research arm of one of the world's largest companies, and the producer of the Gemini frontier model line. The deck traces how all three of those identities came to coexist, and what that means for the lab's role in LLM history.</p>
+    <ul class="contents-list">
+        <li><a href="#slide-01">The 2010 Founding &mdash; Hassabis, Suleyman, Legg</a></li>
+        <li><a href="#slide-02">The 2014 Google Acquisition</a></li>
+        <li><a href="#slide-03">Atari &rarr; AlphaGo &mdash; The RL Era</a></li>
+        <li><a href="#slide-04">AlphaFold and Science DeepMind</a></li>
+        <li><a href="#slide-05">DeepMind's Pre-LLM Reluctance</a></li>
+        <li><a href="#slide-06">Pathways, PaLM and the Brain&ndash;DeepMind Tension</a></li>
+        <li><a href="#slide-07">The 2023 Merger and Gemini</a></li>
+        <li><a href="#slide-08">Gemini 1, 1.5, 2, 2.5 and Production Adoption</a></li>
+        <li><a href="#slide-09">The Demis Hassabis Profile</a></li>
+        <li><a href="#slide-10">Other DeepMind Notables</a></li>
+        <li><a href="#slide-11">The DeepMind Lab Today</a></li>
+        <li><a href="#slide-12">Cheat Sheet</a></li>
+    </ul>
+</section>
+
+<section class="slide" id="slide-01">
+    <div class="slide-number">01</div>
+    <h2>The 2010 Founding &mdash; Hassabis, Suleyman, Legg</h2>
+    <p>DeepMind was incorporated in London in September 2010 by three people with very different backgrounds: <strong>Demis Hassabis</strong>, a neuroscientist and former chess prodigy/games-industry entrepreneur; <strong>Mustafa Suleyman</strong>, a King's College Oxford dropout who had run a not-for-profit human-rights group; and <strong>Shane Legg</strong>, a New Zealand-born theoretical computer scientist who had done his PhD at IDSIA in Lugano under Marcus Hutter on theoretical AGI.</p>
+
+    <div class="person-card">
+        <div class="person-photo">DH</div>
+        <div>
+            <h4>Demis Hassabis</h4>
+            <div class="role">CEO and co-founder; Cambridge undergrad &rarr; Bullfrog/Lionhead games &rarr; UCL PhD neuroscience &rarr; DeepMind &rarr; Google DeepMind CEO</div>
+            <p>British, Cypriot/Greek/Singaporean heritage. Chess master at 13. Lead AI programmer on <em>Theme Park</em> aged 17. Worked at Lionhead Studios under Peter Molyneux. Founded the games studio <em>Elixir</em> in his early twenties (it produced <em>Republic: The Revolution</em> and <em>Evil Genius</em>). Then went back to UCL to do a PhD in cognitive neuroscience, specifically on memory and imagination. The DeepMind founding philosophy &mdash; AGI by understanding the brain &mdash; reflects this trajectory directly. Joint Nobel Prize 2024 (Chemistry, with Jumper, for AlphaFold).</p>
+        </div>
+    </div>
+
+    <div class="person-card">
+        <div class="person-photo">MS</div>
+        <div>
+            <h4>Mustafa Suleyman</h4>
+            <div class="role">Co-founder; left DeepMind 2019 &rarr; Inflection AI co-founder 2022 &rarr; Microsoft AI CEO 2024</div>
+            <p>British. Met Hassabis when their families were neighbours; Hassabis's brother and Suleyman were close friends. Ran a Muslim youth telephone helpline before co-founding DeepMind. The applied-AI / partnerships side of the early lab. Left DeepMind in 2019, eventually co-founded Inflection AI with Reid Hoffman and Karen Simonyan. In March 2024 most of Inflection's senior staff including Suleyman moved to Microsoft to run Microsoft AI.</p>
+        </div>
+    </div>
+
+    <div class="person-card">
+        <div class="person-photo">SL</div>
+        <div>
+            <h4>Shane Legg</h4>
+            <div class="role">Co-founder, Chief AGI Scientist</div>
+            <p>New Zealander. PhD with Marcus Hutter on theoretical AGI metrics. The most consistent theoretical voice in the lab; has held roughly the same view for twenty years that AGI is achievable in a relatively short timeframe and requires careful preparation. Lower public profile than Hassabis or Suleyman but central to the lab's strategic direction.</p>
+        </div>
+    </div>
+
+    <div class="callout">
+        <div class="callout-label">The original DeepMind pitch</div>
+        <p>"We're going to solve intelligence. And then we're going to use it to solve everything else." Hassabis used variations of this line in fundraising decks from 2010 onwards. Investors included Peter Thiel (Founders Fund), Elon Musk (a few hundred thousand dollars personally), Horizons Ventures (Li Ka-shing), and Scott Banister.</p>
+    </div>
+</section>
+
+<section class="slide" id="slide-02">
+    <div class="slide-number">02</div>
+    <h2>The 2014 Google Acquisition</h2>
+    <p>In late 2013 Facebook tried to acquire DeepMind. Google won the bidding war &mdash; the deal closed in January 2014 at a reported ~$500 M, far higher than DeepMind's revenue justified. Two unusual conditions were attached:</p>
+
+    <div class="diagram-grid cols-2">
+        <div class="diagram-panel accent-border">
+            <h4>What DeepMind got</h4>
+            <ul>
+                <li>Headquarters stayed in London. Has remained there.</li>
+                <li>An ethics board / advisory board was committed to (the structure has evolved).</li>
+                <li>Substantial autonomy from Google's product organisation.</li>
+                <li>Access to Google compute (eventually TPUs) at internal pricing.</li>
+            </ul>
+        </div>
+        <div class="diagram-panel y">
+            <h4>What Google got</h4>
+            <ul>
+                <li>The leading academic-style RL research group, intact.</li>
+                <li>An optionality bet on AGI.</li>
+                <li>An existence-of-existence proof that an outside lab could be acquired without destroying it.</li>
+                <li>The first glimpse of a London-based research strategy that has held since.</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="callout y">
+        <div class="callout-label">Why Google paid so much</div>
+        <p>Multiple sources have reported that Larry Page and Sergey Brin had a personal interest in AGI dating back to Google's earliest days. The DeepMind acquisition was reportedly Page's call as much as Eric Schmidt's, on the thesis that owning a serious AGI research lab was strategically more valuable than any near-term financial accounting. The price &mdash; widely seen as inflated at the time &mdash; turned out to be a small fraction of the eventual strategic value.</p>
+    </div>
+</section>
+
+<section class="slide" id="slide-03">
+    <div class="slide-number">03</div>
+    <h2>Atari &rarr; AlphaGo &mdash; The RL Era</h2>
+    <p>DeepMind's first famous result, before the Google acquisition closed, was the <strong>Deep Q-Network (DQN)</strong> paper of December 2013 (with the journal version in <em>Nature</em> Feb 2015): a reinforcement-learning agent that learned to play 49 Atari 2600 games at human-or-superhuman level using only the screen pixels and the score as inputs. <strong>Volodymyr Mnih, Koray Kavukcuoglu, David Silver</strong> et al.</p>
+
+    <p>From there the cadence was extraordinary:</p>
+
+    <div class="table-wrap">
+    <table>
+        <thead><tr><th>Year</th><th>Result</th><th>What it showed</th></tr></thead>
+        <tbody>
+            <tr><td>2013/15</td><td>DQN, Atari</td><td>Deep RL on raw pixels works.</td></tr>
+            <tr><td>2016</td><td>AlphaGo beats Lee Sedol 4&ndash;1</td><td>Search + deep RL solves a problem most experts thought was 10 years away. Run on TPU v1.</td></tr>
+            <tr><td>2017</td><td>AlphaGo Zero</td><td>Self-play from scratch, no human games. Far stronger than AlphaGo.</td></tr>
+            <tr><td>2018</td><td>AlphaZero</td><td>Same algorithm beats world-best engines at chess, shogi and Go.</td></tr>
+            <tr><td>2019</td><td>MuZero</td><td>Plans without being told the rules of the game. Closes the loop on model-based RL.</td></tr>
+            <tr><td>2019</td><td>AlphaStar</td><td>Beats StarCraft II grandmasters. Multi-agent, partial observation, real-time.</td></tr>
+        </tbody>
+    </table>
+    </div>
+
+    <p>The AlphaGo&ndash;Lee Sedol match in March 2016 is, alongside the GPT-3 paper and the ChatGPT launch, one of the three "this changed how the public thinks about AI" events of the modern era.</p>
+
+    <div class="callout">
+        <div class="callout-label">A subtle pattern</div>
+        <p>DeepMind's pre-LLM identity was reinforcement learning + search. This is technically and culturally distinct from language modelling: RL emphasises agents, environments, exploration, and reward design. When the field's centre of gravity shifted to <em>scaling next-token prediction</em>, DeepMind had less institutional muscle than OpenAI did because the work was different. The lab's catch-up effort in 2021&ndash;2023 is partly a rebuild of language-modelling muscle from scratch.</p>
+    </div>
+</section>
+
+<section class="slide" id="slide-04">
+    <div class="slide-number">04</div>
+    <h2>AlphaFold and Science DeepMind</h2>
+    <p>Alongside the games line, DeepMind built a science-applications line that produced its most consequential single achievement: <strong>AlphaFold</strong>, the protein-structure prediction system.</p>
+
+    <div class="table-wrap">
+    <table>
+        <thead><tr><th>Year</th><th>Result</th><th>What it showed</th></tr></thead>
+        <tbody>
+            <tr><td>2018</td><td>AlphaFold 1</td><td>Wins CASP13. First learning-based system to be competitive with classical methods.</td></tr>
+            <tr><td>2020</td><td>AlphaFold 2</td><td>Wins CASP14 by a huge margin. Generally considered to have <em>solved</em> single-domain protein structure prediction.</td></tr>
+            <tr><td>2021</td><td>AlphaFold-Multimer; protein database release</td><td>Hundreds of thousands of structures released open-access.</td></tr>
+            <tr><td>2024</td><td>AlphaFold 3</td><td>Extended to small molecules, nucleic acids, ligands. Shipped as a controlled-access service.</td></tr>
+            <tr><td>2024</td><td>Nobel Prize in Chemistry</td><td>Hassabis and Jumper share half of the prize.</td></tr>
+        </tbody>
+    </table>
+    </div>
+
+    <p>The science programme has expanded beyond proteins: <strong>GraphCast</strong> for weather forecasting, <strong>AlphaProof / AlphaGeometry</strong> for IMO-level mathematics, <strong>materials</strong> work (GNoME), <strong>fusion</strong> (plasma control with EPFL).</p>
+
+    <div class="callout y">
+        <div class="callout-label">Why the science line matters</div>
+        <p>Science DeepMind is the strongest existing case study that frontier AI applied to a specific, high-value scientific domain can produce step-change results. The AlphaFold programme's strategic importance for the lab is also internal: it gives DeepMind a research-credibility moat that LLM-only labs do not have. Hassabis's strategic posture, very consistently, is that DeepMind's distinctive identity is the science applications, with LLM frontier work as a means rather than an end.</p>
+    </div>
+</section>
+
+<section class="slide" id="slide-05">
+    <div class="slide-number">05</div>
+    <h2>DeepMind's Pre-LLM Reluctance</h2>
+    <p>Through 2017&ndash;2020 DeepMind did not have an OpenAI-style GPT line. The reasons are partly cultural and partly accidental. In aggregate they explain why DeepMind, which produced the talent that wrote the transformer paper at sister organisation Google Brain, did not turn it into the dominant LLM lab.</p>
+
+    <div class="diagram-grid cols-3">
+        <div class="diagram-panel accent-border">
+            <h4>1. Research culture</h4>
+            <p>DeepMind valued conceptual breakthroughs (DQN, AlphaGo, AlphaFold). Scaling a known architecture was not glamorous. <em>"Engineering, not science"</em> was an unspoken framing.</p>
+        </div>
+        <div class="diagram-panel y">
+            <h4>2. Budget incentives</h4>
+            <p>DeepMind ran on a fixed Google budget; running a $50 M training experiment competed with every other line in the lab. Brain (Mountain View) had similar fixed budgets but more political access to TPU pods.</p>
+        </div>
+        <div class="diagram-panel g">
+            <h4>3. Personnel concentration</h4>
+            <p>The senior LLM-relevant talent at Google was concentrated at Brain and Google AI Language &mdash; the BERT and T5 teams &mdash; not at DeepMind. The transformer authors themselves were Brain people, not DeepMind people.</p>
+        </div>
+    </div>
+
+    <h3>The internal effect</h3>
+    <p>By 2020 DeepMind had Gopher (a 280 B-parameter LM) and was running good language-model research. But it was not the centre of the work the way OpenAI was. Its <em>Chinchilla</em> paper (Hoffmann et al, 2022) corrected the Kaplan 2020 scaling laws and is one of the most influential single-paper contributions to LLM training of the entire era. But it is Chinchilla as <em>analysis</em>, not Chinchilla as a competitive product.</p>
+
+    <div class="callout r">
+        <div class="callout-label">Chinchilla, briefly</div>
+        <p>Hoffmann et al showed that the Kaplan 2020 scaling-laws conclusion ("more parameters, less data") was wrong: optimal training scales tokens roughly proportionally to parameters (rather than parameters faster than tokens). Chinchilla (70 B params, 1.4 T tokens) outperformed Gopher (280 B, 300 B tokens). The result has been built into every frontier lab's training methodology since.</p>
+    </div>
+</section>
+
+<section class="slide" id="slide-06">
+    <div class="slide-number">06</div>
+    <h2>Pathways, PaLM and the Brain&ndash;DeepMind Tension</h2>
+    <p>For most of 2018&ndash;2023 Google had two large AI organisations &mdash; Brain (Mountain View) and DeepMind (London) &mdash; with overlapping mandates, both reporting up through Sundar Pichai but day-to-day independently. It is one of the most-discussed pieces of Google org chart history.</p>
+
+    <p>The tension peaked around 2021&ndash;2022 with two competing flagship LLM programmes:</p>
+
+    <div class="diagram-grid cols-2">
+        <div class="diagram-panel y">
+            <h4>Pathways / PaLM (Brain)</h4>
+            <p>Jeff Dean's Pathways vision: a single foundation model that could route any task to specialised sub-modules. <strong>PaLM</strong> (540 B, April 2022) and <strong>PaLM-2</strong> (May 2023) shipped under this banner. Brain's TPU-pod-scale infrastructure made these runs feasible.</p>
+        </div>
+        <div class="diagram-panel accent-border">
+            <h4>Gopher / Chinchilla / RETRO (DeepMind)</h4>
+            <p>DeepMind's Gopher (280 B, Dec 2021), Chinchilla, and RETRO (retrieval-augmented). Strong research, less product-channel adoption inside Google.</p>
+        </div>
+    </div>
+
+    <p>The duplication was visible enough externally to be a regular topic in the AI press by 2022. ChatGPT in November 2022 made the situation untenable: Google had two world-class LLM programmes and no shipped consumer chat product. Bard (now Gemini) launched on PaLM-2 derivatives in early 2023 and was widely judged underwhelming relative to ChatGPT.</p>
+
+    <div class="callout y">
+        <div class="callout-label">The "code red"</div>
+        <p>Sundar Pichai reportedly issued a <em>"code red"</em> internally in December 2022 over ChatGPT's launch. The April 2023 announcement of the Brain&ndash;DeepMind merger was the structural response.</p>
+    </div>
+</section>
+
+<section class="slide" id="slide-07">
+    <div class="slide-number">07</div>
+    <h2>The 2023 Merger and Gemini</h2>
+    <p>On 20 April 2023 Sundar Pichai announced that Google Brain and DeepMind would merge into a single organisation, <strong>Google DeepMind</strong>, with Demis Hassabis as CEO. Jeff Dean was appointed Chief Scientist of Google AI overall (slightly different remit). The merger formally completed over the following six months.</p>
+
+    <div class="diagram-grid cols-2">
+        <div class="diagram-panel accent-border">
+            <h4>What the merger fixed</h4>
+            <ul>
+                <li>Single decision-maker on frontier model strategy.</li>
+                <li>Combined TPU resourcing and team allocation.</li>
+                <li>Faster shipping cadence on flagship models (Gemini 1 launched Dec 2023 &mdash; eight months after the merger announcement).</li>
+                <li>Clear external brand: Google DeepMind, the Gemini line.</li>
+            </ul>
+        </div>
+        <div class="diagram-panel y">
+            <h4>What it did not fix</h4>
+            <ul>
+                <li>Bay Area / London cultural differences (still real).</li>
+                <li>Internal duplication on smaller research lines (still working through this in 2025).</li>
+                <li>Research-vs-ship tension that has been part of Google AI for a decade.</li>
+                <li>The reality that several of the strongest individual contributors had already left for OpenAI / Anthropic / start-ups.</li>
+            </ul>
+        </div>
+    </div>
+
+    <p>Gemini 1 launched in three sizes (Nano, Pro, Ultra) on 6 December 2023. The launch was widely seen as competent but not transformational; the demo video was edited in ways that were criticised, and Ultra's headline benchmark wins were narrow.</p>
+</section>
+
+<section class="slide" id="slide-08">
+    <div class="slide-number">08</div>
+    <h2>Gemini 1, 1.5, 2, 2.5 and Production Adoption</h2>
+    <div class="table-wrap">
+    <table>
+        <thead><tr><th>Date</th><th>Model</th><th>What it added</th></tr></thead>
+        <tbody>
+            <tr><td>Dec 2023</td><td>Gemini 1 (Nano / Pro / Ultra)</td><td>First post-merger flagship. Multimodal native. Mixed reception.</td></tr>
+            <tr><td>Feb 2024</td><td>Gemini 1.5 Pro</td><td>1 M-token context window &mdash; first frontier model with this scale of context. Genuine differentiation.</td></tr>
+            <tr><td>May 2024</td><td>Project Astra demo</td><td>Real-time multimodal agent demo. Streaming voice, vision, action.</td></tr>
+            <tr><td>Dec 2024</td><td>Gemini 2.0 Flash &amp; experimental Pro</td><td>Stronger reasoning, native tool use.</td></tr>
+            <tr><td>2025</td><td>Gemini 2.5 family + Thinking variants</td><td>Test-time compute matched to o-series; Gemini 2.5 Pro Deep Think pushes math/science benchmarks.</td></tr>
+            <tr><td>2025&ndash;26</td><td>Project Mariner (browser agent)</td><td>Google's GUI-controlling agent answer to Computer Use and Operator.</td></tr>
+        </tbody>
+    </table>
+    </div>
+
+    <h3>Where Gemini wins, where it does not</h3>
+    <p><strong>Wins:</strong> long context (still ahead at 2 M tokens for some Gemini variants), multimodal (Sora-class video understanding plus generation), Search and Workspace integration (a different game from API competition), the cost curve at the lower-end Flash tier.</p>
+
+    <p><strong>Does not win:</strong> developer market share for coding agents (Claude leads), consumer chat brand (ChatGPT leads), API revenue (third behind OpenAI and Anthropic among western labs).</p>
+
+    <div class="callout">
+        <div class="callout-label">The strategic puzzle</div>
+        <p>Google's strategic asset is not really Gemini-the-model; it is Gemini deeply integrated into Search, Workspace, Android and the phone-OS layer. By 2025 the integration story was the most active one. Whether Google can convert distribution leverage into a frontier-lab competitive position is one of the open strategic questions of the next two years.</p>
+    </div>
+</section>
+
+<section class="slide" id="slide-09">
+    <div class="slide-number">09</div>
+    <h2>The Demis Hassabis Profile</h2>
+    <p>Hassabis is one of the more distinctive principals in the field, in part because of how unusual his background is: a scientist who was previously a games-industry creative-and-technical lead, who is also an unusually strong public communicator without being a Twitter fixture, who runs an organisation an ocean away from his board. A short character sketch:</p>
+
+    <div class="diagram-grid cols-2">
+        <div class="diagram-panel accent-border">
+            <h4>Reasonably well-attested</h4>
+            <ul>
+                <li>Calm, methodical, low-volume speaker.</li>
+                <li>Genuinely interested in the science of intelligence; reads and engages with neuroscience literature regularly.</li>
+                <li>Plays games competitively at high levels (chess, poker; was on the UK national team).</li>
+                <li>Long-horizon strategic thinker; the lab's roadmap is recognisably his.</li>
+            </ul>
+        </div>
+        <div class="diagram-panel y">
+            <h4>Public posture</h4>
+            <ul>
+                <li>Cautious about AGI timelines but not dismissive of fast scenarios.</li>
+                <li>Stronger emphasis on scientific applications than most frontier-lab CEOs.</li>
+                <li>Engages substantially with UK government and regulators (UK AISI, AI Safety Summit).</li>
+                <li>Unusually willing to discuss philosophical questions about consciousness and intelligence in interviews.</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="quote">
+        I think we should treat this technology with the same care and respect we treat any other transformative technology in human history &mdash; nuclear, biological, the printing press. We don't get to pretend it is just another product.
+        <span class="attr">&mdash; Demis Hassabis, paraphrased from multiple interviews 2023&ndash;2024.</span>
+    </div>
+
+    <p>The Nobel Prize in Chemistry in October 2024 was a public confirmation of Hassabis's long-standing strategic emphasis on science applications. Few frontier-lab CEOs have a Nobel attached to a flagship product line; the strategic value of that is hard to quantify but real.</p>
+</section>
+
+<section class="slide" id="slide-10">
+    <div class="slide-number">10</div>
+    <h2>Other DeepMind Notables</h2>
+
+    <div class="person-card">
+        <div class="person-photo">KK</div>
+        <div>
+            <h4>Koray Kavukcuoglu &mdash; CTO</h4>
+            <div class="role">DeepMind from 2012; previously LeCun postdoc at NYU</div>
+            <p>Turkish. Senior research engineer turned CTO. The technical infrastructure-and-engineering lead behind much of DeepMind's training stack. Quiet, low-profile, deeply trusted internally.</p>
+        </div>
+    </div>
+
+    <div class="person-card">
+        <div class="person-photo">OV</div>
+        <div>
+            <h4>Oriol Vinyals &mdash; VP Research</h4>
+            <div class="role">DeepMind from 2016 (was at Brain before); Hinton/UC Berkeley alumni</div>
+            <p>Spanish. Co-author seq2seq, AlphaStar lead, the most prolific recent senior researcher inside the lab. Public-facing scientific voice second only to Hassabis at the lab.</p>
+        </div>
+    </div>
+
+    <div class="person-card">
+        <div class="person-photo">DS</div>
+        <div>
+            <h4>David Silver &mdash; Principal Scientist; AlphaGo lead</h4>
+            <div class="role">UCL professor (joint); DeepMind from 2013</div>
+            <p>British. Rich Sutton's PhD student. Architect of AlphaGo, AlphaGo Zero, AlphaZero, MuZero. Authored the 2024 essay "Welcome to the Era of Experience" arguing that the next phase of AI is RL on real-world experience rather than imitation of static text.</p>
+        </div>
+    </div>
+
+    <div class="person-card">
+        <div class="person-photo">MS</div>
+        <div>
+            <h4>Mustafa Suleyman &mdash; departed for Microsoft AI</h4>
+            <div class="role">Co-founder; DeepMind 2010&ndash;2019; Inflection 2022&ndash;2024; Microsoft AI CEO 2024&ndash;</div>
+            <p>Public-facing applied-AI builder. After leaving DeepMind, founded Inflection AI with Reid Hoffman and Karen Simonyan; their product Pi was one of the more thoughtful consumer-AI experiments. Inflection's senior team transferred to Microsoft in March 2024 in a $650 M licensing arrangement that was widely read as a near-acquisition. Now runs Microsoft AI as Copilot's product lead.</p>
+        </div>
+    </div>
+
+    <div class="person-card">
+        <div class="person-photo">SL</div>
+        <div>
+            <h4>Shane Legg &mdash; Chief AGI Scientist</h4>
+            <div class="role">Co-founder, still in the lab</div>
+            <p>Public-facing strategic-thinking voice. The most consistent voice in the field on AGI timelines &mdash; has been forecasting roughly 2028 for AGI for over fifteen years. Many forecasters have updated; he largely has not, which is a useful data point in itself.</p>
+        </div>
+    </div>
+
+    <div class="person-card">
+        <div class="person-photo">JD</div>
+        <div>
+            <h4>Jeff Dean &mdash; Google AI Chief Scientist (post-merger role)</h4>
+            <div class="role">Google Senior Fellow; Brain co-founder; Google AI Chief Scientist 2023&ndash;</div>
+            <p>The best-regarded systems engineer in computer science. Co-founder Brain, MapReduce / Bigtable / Spanner / TensorFlow / TPU programme alumni. After the merger, runs Google's broader AI research strategy at the platform level rather than the immediate Gemini line.</p>
+        </div>
+    </div>
+</section>
+
+<section class="slide" id="slide-11">
+    <div class="slide-number">11</div>
+    <h2>The DeepMind Lab Today</h2>
+    <p>Google DeepMind in 2026 is around 6,000 people across London (HQ), Mountain View, Z&uuml;rich, Tokyo, Paris and a few other locations. It is by some margin the largest of the frontier labs. Its productive surface area is also the broadest:</p>
+
+    <div class="diagram-grid cols-2">
+        <div class="diagram-panel accent-border">
+            <h4>What the lab works on</h4>
+            <ul>
+                <li>Gemini frontier line (text, image, audio, video, code).</li>
+                <li>Project Astra (real-time multimodal agent).</li>
+                <li>Project Mariner (browser agent).</li>
+                <li>AlphaFold and the science line (proteins, materials, weather, fusion).</li>
+                <li>AlphaProof / AlphaGeometry (math reasoning).</li>
+                <li>Gemma open-weight family.</li>
+                <li>Robotics (Gemini Robotics, RT-1/RT-2 lineage).</li>
+                <li>Safety, alignment, interpretability (Frontier Safety Framework, mechanistic interpretability team).</li>
+            </ul>
+        </div>
+        <div class="diagram-panel y">
+            <h4>Strategic position</h4>
+            <ul>
+                <li>One of three western frontier labs by capability.</li>
+                <li>Deepest distribution leverage of any lab via Google products.</li>
+                <li>Strongest science-applications portfolio.</li>
+                <li>Less commercially direct than OpenAI/Anthropic at the API tier.</li>
+                <li>Most international talent footprint.</li>
+                <li>Subject to Google product-organisation pressures the others do not have.</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="callout y">
+        <div class="callout-label">A useful frame for the lab</div>
+        <p>Google DeepMind is the only frontier lab that is also a product engineering organisation inside a $2 T public company. The constraint is also the asset: it ships less aggressively than OpenAI, but it has surface area for the technology that no other lab has. Whether that becomes a moat or a millstone is the central commercial-strategic question for the lab over the next three years.</p>
+    </div>
+</section>
+
+<section class="slide" id="slide-12">
+    <div class="slide-number">12</div>
+    <h2>Cheat Sheet</h2>
+
+    <div class="diagram-grid cols-2">
+        <div class="diagram-panel accent-border">
+            <h4>Five turning points</h4>
+            <ul>
+                <li><strong>2010</strong> &mdash; founded London by Hassabis, Suleyman, Legg.</li>
+                <li><strong>2014</strong> &mdash; Google acquires for ~$500 M.</li>
+                <li><strong>2016</strong> &mdash; AlphaGo beats Lee Sedol.</li>
+                <li><strong>2020</strong> &mdash; AlphaFold 2 solves protein structure.</li>
+                <li><strong>2023</strong> &mdash; Brain&ndash;DeepMind merger; Gemini 1.</li>
+            </ul>
+        </div>
+        <div class="diagram-panel y">
+            <h4>The principals</h4>
+            <ul>
+                <li>Demis Hassabis &mdash; CEO; 2024 Nobel.</li>
+                <li>Shane Legg &mdash; Chief AGI Scientist.</li>
+                <li>Koray Kavukcuoglu &mdash; CTO.</li>
+                <li>Oriol Vinyals &mdash; VP Research.</li>
+                <li>David Silver &mdash; AlphaGo / RL.</li>
+                <li>Jeff Dean &mdash; Google AI Chief Scientist (overall).</li>
+            </ul>
+        </div>
+        <div class="diagram-panel g">
+            <h4>Three pillars</h4>
+            <ul>
+                <li>Frontier LLM (Gemini line).</li>
+                <li>Science applications (AlphaFold, AlphaProof, materials).</li>
+                <li>RL / agents (DQN heritage; Astra, Mariner, robotics).</li>
+            </ul>
+        </div>
+        <div class="diagram-panel r">
+            <h4>What's next in the series</h4>
+            <ul>
+                <li>08 &mdash; Meta, Mistral, xAI &amp; the second tier.</li>
+                <li>09 &mdash; Chinese frontier labs.</li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<footer class="footer">
+    <p>Part of the <a href="https://github.com/BrendanJamesLynskey/LLM_Hub_LLM_History">LLM History series</a> in the <a href="https://github.com/BrendanJamesLynskey/LLMs">LLMs hub</a>.</p>
+    <p style="margin-top: 0.5rem;"><a href="https://brendanjameslynskey.github.io/LLM_History_06_Anthropic/">&larr; 06 Anthropic</a> &middot; <a href="https://brendanjameslynskey.github.io/LLM_History_08_Meta_Mistral_xAI_Others/">08 Meta, Mistral, xAI &amp; Others &rarr;</a></p>
+</footer>
+
+</body>
+</html>
